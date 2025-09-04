@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-public class JwtServiceImplementation implements JwtService {
+public class JwtServiceImpl implements JwtService {
     private final String secretKey = "12345678wertyu@#$%^&*SDFGH2#$%^&*@#$%^&DFVBN@#$%RTG$%TG(*&YTGTGB$%^&UJB^YH*UHYJM"; // use stronger key in prod
 
     public String generateToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getUsername())
-                .claim("role", user.getUser_role())
+                .claim("role", user.getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), SignatureAlgorithm.HS256)

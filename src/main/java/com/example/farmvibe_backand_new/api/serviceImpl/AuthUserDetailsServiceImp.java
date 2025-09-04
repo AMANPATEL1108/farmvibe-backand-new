@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AuthUserDetailsServiceImplementation implements UserDetailsService, AuthUserDetailsService {
+public class AuthUserDetailsServiceImp implements UserDetailsService, AuthUserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -25,8 +25,8 @@ public class AuthUserDetailsServiceImplementation implements UserDetailsService,
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
-                user.getUser_password(),
-                List.of(new SimpleGrantedAuthority(user.getUser_role()))
+                user.getPassword(),
+                List.of(new SimpleGrantedAuthority(user.getRole()))
         );
     }
 }
