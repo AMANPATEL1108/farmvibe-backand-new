@@ -14,6 +14,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 
@@ -32,18 +36,18 @@ public class UserAuthServiceImpl implements UserAuthService {
     @Override
     public ResponseEntity<?> createUser(RegisterDTO registerDTO) {
 
-        // Create User entity from UserDTO
         User user = new User();
         user.setUsername(registerDTO.getUsername());
         user.setUser_firstName(registerDTO.getUser_firstName());
         user.setUser_lastName(registerDTO.getUser_lastName());
         user.setUser_email(registerDTO.getUser_email());
         user.setProfileImageUrl(registerDTO.getProfileImageUrl());
+        user.setCreatedDate(ZonedDateTime.now(ZoneId.of("Asia/Kolkata")));
+        user.setUpdatedDate(ZonedDateTime.now(ZoneId.of("Asia/Kolkata")));
 
-        // Password encoding
+
         user.setUser_password(passwordEncoder.encode(registerDTO.getUser_password()));
 
-        // Role handling
         if (registerDTO.getRole() == null) {
             user.setRole("ROLE_USER");
         } else {
@@ -56,9 +60,10 @@ public class UserAuthServiceImpl implements UserAuthService {
 
         userRepository.save(user);
 
-        // Return success response
         return ResponseEntity.ok(user);
     }
+
+
 
     @Override
     public ResponseEntity<?> authenticateAndGenerateToken(LoginDTO request) {

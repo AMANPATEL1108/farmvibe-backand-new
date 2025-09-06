@@ -3,7 +3,12 @@ package com.example.farmvibe_backand_new.api.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
@@ -41,6 +46,13 @@ public class User {
     @Column(name = "role")
     private String role;
 
+    @Column(name = "created_date", updatable = false)
+    private ZonedDateTime createdDate;
+
+    @Column(name = "updated_date")
+    private ZonedDateTime updatedDate;
+
+
 
     @PrePersist
     protected void onCreate() {
@@ -52,5 +64,6 @@ public class User {
     public String getFullName() {
         return user_firstName + " " + user_lastName;
     }
+
 
 }
