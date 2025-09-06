@@ -1,6 +1,7 @@
 package com.example.farmvibe_backand_new.api.serviceImpl;
 
-import com.example.farmvibe_backand_new.api.dto.request.AuthRequest;
+import com.example.farmvibe_backand_new.api.dto.LoginDTO;
+import com.example.farmvibe_backand_new.api.dto.RegisterDTO;
 import com.example.farmvibe_backand_new.api.model.User;
 import com.example.farmvibe_backand_new.api.repository.UserRepository;
 import com.example.farmvibe_backand_new.api.service.UserAuthService;
@@ -27,20 +28,40 @@ public class UserAuthServiceImpl implements UserAuthService {
     private JwtService jwtService;
     @Autowired
     private AuthenticationManager authenticationManager;
-    @Override
-    public ResponseEntity<?> createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        if (!user.getRole().startsWith("ROLE_")) {
-            user.setRole("ROLE_" + user.getRole());
+    @Override
+    public ResponseEntity<?> createUser(RegisterDTO registerDTO) {
+
+        // Create User entity from UserDTO
+        User user = new User();
+        user.setUsername(registerDTO.getUsername());
+        user.setUser_firstName(registerDTO.getUser_firstName());
+        user.setUser_lastName(registerDTO.getUser_lastName());
+        user.setUser_email(registerDTO.getUser_email());
+        user.setProfileImageUrl(registerDTO.getProfileImageUrl());
+
+        // Password encoding
+        user.setUser_password(passwordEncoder.encode(registerDTO.getUser_password()));
+
+        // Role handling
+        if (registerDTO.getRole() == null) {
+            user.setRole("ROLE_USER");
+        } else {
+            if (!registerDTO.getRole().startsWith("ROLE_")) {
+                user.setRole("ROLE_" + registerDTO.getRole());
+            } else {
+                user.setRole(registerDTO.getRole());
+            }
         }
+
         userRepository.save(user);
 
+        // Return success response
         return ResponseEntity.ok(user);
     }
 
     @Override
-    public ResponseEntity<?> authenticateAndGenerateToken(AuthRequest request) {
+    public ResponseEntity<?> authenticateAndGenerateToken(LoginDTO request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password()));
 
@@ -53,6 +74,7 @@ public class UserAuthServiceImpl implements UserAuthService {
             return ResponseEntity.status(404).body("User not found");
         }
     }
+
 
     @Override
     public ResponseEntity<Optional<User>> findByUsername(String username) {

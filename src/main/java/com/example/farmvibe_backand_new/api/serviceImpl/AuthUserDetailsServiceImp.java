@@ -25,7 +25,7 @@ public class AuthUserDetailsServiceImp implements UserDetailsService, AuthUserDe
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
-                user.getPassword(),
+                user.getUser_password(),
                 List.of(new SimpleGrantedAuthority(user.getRole()))
         );
     }
