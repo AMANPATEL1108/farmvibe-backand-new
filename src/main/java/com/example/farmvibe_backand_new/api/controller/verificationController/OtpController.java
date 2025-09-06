@@ -1,9 +1,14 @@
 package com.example.farmvibe_backand_new.api.controller.verificationController;
 
+import com.example.farmvibe_backand_new.api.dto.OtpVerificationRequest;
+import com.example.farmvibe_backand_new.api.dto.SendOtpRequest;
 import com.example.farmvibe_backand_new.api.service.OtpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -13,24 +18,37 @@ public class OtpController {
     private OtpService otpService;
 
     @PostMapping("/send-otp")
-    public ResponseEntity<String> sendOtp(@RequestParam("phone") String phone) {
-        boolean result = otpService.generateOtp(phone);
+    public ResponseEntity<Map<String, Object>> sendOtp(@RequestBody SendOtpRequest request) {
+        Map<String, Object> response = new HashMap<>();
+
+        boolean result = otpService.generateOtp(request.getUsername());
 
         if (result) {
-            return ResponseEntity.ok("{\"success\": \"OTP sent successfully.\"}");
+            response.put("success", true);
+            response.put("message", "OTP sent successfully.");
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.badRequest().body("{\"error\": \"Invalid phone number format.\"}");
+            response.put("success", false);
+            response.put("message", "Invalid username.");
+            return ResponseEntity.badRequest().body(response);
         }
     }
+
 
     @PostMapping("/verify-otp")
-    public ResponseEntity<String> verifyOtp(@RequestParam("phone") String phone, @RequestParam("otp") String otp) {
-        boolean isValid = otpService.validateOtp(phone, otp);
+    public ResponseEntity<Map<String, Object>> verifyOtp(@RequestBody OtpVerificationRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        boolean isValid = otpService.validateOtp(request.getUsername(), request.getOtp());
 
         if (isValid) {
-            return ResponseEntity.ok("{\"success\": true}");
+            response.put("success", true);
+            response.put("message", "OTP verified successfully.");
+            return ResponseEntity.ok(response);
         }
 
-        return ResponseEntity.status(400).body("{\"success\": false, \"message\": \"Invalid OTP.\"}");
+        response.put("success", false);
+        response.put("message", "Invalid OTP.");
+        return ResponseEntity.status(400).body(response);
     }
+
 }
