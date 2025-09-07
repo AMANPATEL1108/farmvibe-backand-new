@@ -7,10 +7,14 @@ import com.example.farmvibe_backand_new.api.repository.UserRepository;
 import com.example.farmvibe_backand_new.api.service.UserAuthService;
 import com.example.farmvibe_backand_new.api.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -65,20 +69,31 @@ public class UserAuthServiceImpl implements UserAuthService {
 
 
 
-    @Override
     public ResponseEntity<?> authenticateAndGenerateToken(LoginDTO request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.username(), request.password()));
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.username(), request.password())
+            );
 
-        Optional<User> userOptional = userRepository.findByUsername(request.username());
+            // Only generate token if authentication succeeds
+            User user = userRepository.findByUsername(request.username())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        if (userOptional.isPresent()) {
-            String token = jwtService.generateToken(userOptional.get());
+            String token = jwtService.generateToken(user);
             return ResponseEntity.ok(Map.of("token", token));
-        } else {
-            return ResponseEntity.status(404).body("User not found");
+
+        } catch (BadCredentialsException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid username or password");
+        } catch (UsernameNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found");
+        } catch (AuthenticationException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Authentication failed");
         }
     }
+
 
 
     @Override

@@ -40,7 +40,6 @@ public class OtpServiceImpl implements OtpService {
 
         // Generate OTP
         String otp = String.format("%06d", RANDOM.nextInt(1_000_000));
-        otpStorage.put(phoneNumber, otp);
 
         // Send OTP using Twilio
         try {
@@ -49,6 +48,7 @@ public class OtpServiceImpl implements OtpService {
                     new PhoneNumber(twilioConfig.getPhoneNumber()),
                     "Your OTP is: " + otp
             ).create();
+            System.out.println(phoneNumber+" "+otp);
         } catch (Exception e) {
             throw new RuntimeException("Failed to send OTP via Twilio: " + e.getMessage(), e);
         }

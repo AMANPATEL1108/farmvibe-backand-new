@@ -20,7 +20,7 @@ public class OtpController {
     @PostMapping("/send-otp")
     public ResponseEntity<Map<String, Object>> sendOtp(@RequestBody SendOtpRequest request) {
         Map<String, Object> response = new HashMap<>();
-
+        System.out.println(request.getUsername());
         boolean result = otpService.generateOtp(request.getUsername());
 
         if (result) {
