@@ -16,6 +16,7 @@ import java.util.Map;
 @Service
 public class OtpServiceImpl implements OtpService {
 
+
     @Autowired
     private TwilioConfig twilioConfig;
 
@@ -29,17 +30,20 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     public boolean generateOtp(String phoneNumber) {
-        if (!phoneNumber.startsWith("+91")) {
-            phoneNumber = "+91"+phoneNumber;
-        }
-        // Validate and format phone number
-
-        if (phoneNumber == null) {
+        if (phoneNumber == null || phoneNumber.isEmpty()) {
             return false;
+        }
+
+        // Always ensure +91 prefix
+        if (!phoneNumber.startsWith("+91")) {
+            phoneNumber = "+91" + phoneNumber;
         }
 
         // Generate OTP
         String otp = String.format("%06d", RANDOM.nextInt(1_000_000));
+
+        // Save OTP in memory (for validation later)
+        otpStorage.put(phoneNumber, otp);
 
         // Send OTP using Twilio
         try {
@@ -48,7 +52,6 @@ public class OtpServiceImpl implements OtpService {
                     new PhoneNumber(twilioConfig.getPhoneNumber()),
                     "Your OTP is: " + otp
             ).create();
-            System.out.println(phoneNumber+" "+otp);
         } catch (Exception e) {
             throw new RuntimeException("Failed to send OTP via Twilio: " + e.getMessage(), e);
         }
@@ -58,21 +61,19 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     public boolean validateOtp(String phoneNumber, String otp) {
-        if (!phoneNumber.startsWith("+91")) {
-            phoneNumber = "+91"+phoneNumber;  // Remove the +91
-        }
-        // Validate and format phone number
-
-        if (phoneNumber == null) {
+        if (phoneNumber == null || otp == null) {
             return false;
+        }
+
+        if (!phoneNumber.startsWith("+91")) {
+            phoneNumber = "+91" + phoneNumber;
         }
 
         String storedOtp = otpStorage.get(phoneNumber);
         if (storedOtp != null && storedOtp.equals(otp)) {
-            otpStorage.remove(phoneNumber);  // OTP used, so remove it
+            otpStorage.remove(phoneNumber);  // OTP used once
             return true;
         }
         return false;
     }
-
 }

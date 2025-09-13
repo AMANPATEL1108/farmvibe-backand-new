@@ -44,11 +44,12 @@ public class OtpController {
             response.put("success", true);
             response.put("message", "OTP verified successfully.");
             return ResponseEntity.ok(response);
+        }else{
+            response.put("success", false);
+            response.put("message", "Invalid OTP.");
+            return ResponseEntity.status(400).body(response);
         }
 
-        response.put("success", false);
-        response.put("message", "Invalid OTP.");
-        return ResponseEntity.status(400).body(response);
     }
 
 }
