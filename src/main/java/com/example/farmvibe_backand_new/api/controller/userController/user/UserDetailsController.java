@@ -19,8 +19,6 @@ public class UserDetailsController {
     @Autowired
     private UserServices userServices;
 
-
-
     @Autowired
     private JwtService jwtService;
 
@@ -41,5 +39,11 @@ public class UserDetailsController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/update-profile-details")
+    public User updateUser(@RequestBody User user) {
+        return userServices.updateUserDetails(user);
+    }
+
 
 }
