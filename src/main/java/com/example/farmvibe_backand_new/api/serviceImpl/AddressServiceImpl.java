@@ -9,7 +9,9 @@ import com.example.farmvibe_backand_new.api.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AddressServiceImpl implements AddressService {
@@ -22,11 +24,17 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address findAddressByUserId(Long userId) {
+        if (userId == null || userId <= 0) {
+            throw new RuntimeException("Invalid user ID");
+        }
         return addressRepository.findByUserId(userId);
     }
 
     @Override
     public Address findAddressById(Long addressId) {
+        if (addressId == null || addressId <= 0) {
+            throw new RuntimeException("Invalid address ID");
+        }
         return addressRepository.findById(addressId).orElse(null);
     }
 
@@ -37,12 +45,20 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<Address> getAllAddressesByUserId(Long userId) {
+        if (userId == null || userId <= 0) {
+            throw new RuntimeException("Invalid user ID");
+        }
         return addressRepository.findAllByUserId(userId);
     }
 
     @Override
     @Transactional
     public Address createAddress(AddressDTO addressDTO) {
+        // Validate required fields
+        if (addressDTO.getUser_id() == null) {
+            throw new RuntimeException("User ID is required");
+        }
+
         User user = userRepository.findById(addressDTO.getUser_id())
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + addressDTO.getUser_id()));
 
@@ -64,9 +80,14 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional
     public Address updateAddress(Long addressId, AddressDTO addressDTO) {
+        if (addressId == null || addressId <= 0) {
+            throw new RuntimeException("Invalid address ID");
+        }
+
         Address existingAddress = addressRepository.findById(addressId)
                 .orElseThrow(() -> new RuntimeException("Address not found with id: " + addressId));
 
+        // Update fields only if they are provided and not empty
         if (addressDTO.getFirst_name() != null && !addressDTO.getFirst_name().trim().isEmpty()) {
             existingAddress.setFirst_name(addressDTO.getFirst_name().trim());
         }
@@ -101,6 +122,10 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional
     public void deleteAddress(Long addressId) {
+        if (addressId == null || addressId <= 0) {
+            throw new RuntimeException("Invalid address ID");
+        }
+
         Address address = addressRepository.findById(addressId)
                 .orElseThrow(() -> new RuntimeException("Address not found with id: " + addressId));
         addressRepository.delete(address);
