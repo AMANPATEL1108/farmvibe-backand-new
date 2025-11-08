@@ -25,6 +25,7 @@ public class Order {
     private String paymentStatus;
     private String deliveryStatus;
 
+    // ✅ ADD THIS FIELD
     private boolean orderConfirmed;
 
     @ManyToOne

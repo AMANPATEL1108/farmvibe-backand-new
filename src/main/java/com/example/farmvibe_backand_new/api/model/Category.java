@@ -1,5 +1,6 @@
 package com.example.farmvibe_backand_new.api.model;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
