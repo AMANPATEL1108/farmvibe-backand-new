@@ -19,9 +19,8 @@ public class Location {
     private String city;
 
     @Column(name = "areas", columnDefinition = "TEXT")
-    private String areas; // Store as JSON string or comma-separated
+    private String areas;
 
-    // Constructor without ID for creating new locations
     public Location(String city, String areas) {
         this.city = city;
         this.areas = areas;
