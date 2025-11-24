@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/public/api/products")
+@RequestMapping("public/api/products")
 @CrossOrigin(origins = {"http://localhost:4200", "http://127.0.0.1:4200"})
 @RequiredArgsConstructor
 public class PublicController {
@@ -19,7 +19,6 @@ public class PublicController {
 
     @GetMapping("/get-all-products")
     public ResponseEntity<List<ProductDetailsDTO>> getAllProducts() {
-        System.out.println("🎯 GET /public/api/products/get-all-products called");
 
         List<ProductDetailsDTO> dtos = productService.getAllProducts()
                 .stream()
