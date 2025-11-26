@@ -1,6 +1,7 @@
 package com.example.farmvibe_backand_new.api.serviceImpl;
 
 
+import com.example.farmvibe_backand_new.api.dto.ProductDetailsDTO;
 import com.example.farmvibe_backand_new.api.model.ProductDetails;
 import com.example.farmvibe_backand_new.api.repository.ProductDetailsRepository;
 import com.example.farmvibe_backand_new.api.service.ProductDetailsService;
@@ -13,22 +14,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductDetailsServiceImpl implements ProductDetailsService {
 
-    private final ProductDetailsRepository repository;
+    private final ProductDetailsRepository productDetailsRepository;
 
     @Override
     public List<ProductDetails> getAllProducts() {
-        return repository.findAll();
+        return productDetailsRepository.findAll();
     }
 
     @Override
     public ProductDetails getProductById(Long id) {
-        return repository.findById(id)
+        return productDetailsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product Not Found"));
     }
 
     @Override
     public ProductDetails createProduct(ProductDetails product) {
-        return repository.save(product);
+        return productDetailsRepository.save(product);
     }
 
     @Override
@@ -60,11 +61,31 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
         if (updatedProduct.getCategory() != null)
             existing.setCategory(updatedProduct.getCategory());
 
-        return repository.save(existing);
+        return productDetailsRepository.save(existing);
     }
 
     @Override
     public void deleteProduct(Long id) {
-        repository.deleteById(id);
+        productDetailsRepository.deleteById(id);
     }
+
+
+    @Override
+    public List<ProductDetailsDTO> getProductsByCategoryId(Long categoryId) {
+        List<ProductDetails> products = productDetailsRepository.findByCategory_Id(categoryId);
+
+        // Map entity to DTO
+        return products.stream()
+                .map(product -> new ProductDetailsDTO(
+                        product.getId(),
+                        product.getName(),
+                        product.getDescription(),
+                        product.getImageUrl(),
+                        product.getPrice(),
+                        product.getWeight(),
+                        product.getStock()
+                ))
+                .toList();
+    }
+
 }

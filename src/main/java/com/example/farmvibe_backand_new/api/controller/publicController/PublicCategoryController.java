@@ -1,5 +1,6 @@
 package com.example.farmvibe_backand_new.api.controller.publicController;
 
+import com.example.farmvibe_backand_new.api.dto.CategoryDTO;
 import com.example.farmvibe_backand_new.api.model.Category;
 import com.example.farmvibe_backand_new.api.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class PublicCategoryController {
 
     // ---------------- READ ALL ----------------
     @GetMapping("/get-all-categories")
-    public List<Category> getAllCategories() {
+    public List<CategoryDTO> getAllCategories() {
         return categoryService.getAllCategories();
     }
 

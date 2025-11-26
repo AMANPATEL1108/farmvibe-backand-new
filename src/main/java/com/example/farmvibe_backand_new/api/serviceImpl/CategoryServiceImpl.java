@@ -1,5 +1,6 @@
 package com.example.farmvibe_backand_new.api.serviceImpl;
 
+import com.example.farmvibe_backand_new.api.dto.CategoryDTO;
 import com.example.farmvibe_backand_new.api.service.CategoryService;
 
 
@@ -47,9 +48,21 @@ public class CategoryServiceImpl implements CategoryService {
 
     // ---------------- READ ALL ----------------
     @Override
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryDTO> getAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+
+        // Map each Category entity to CategoryDTO
+        return categories.stream()
+                .map(category -> new CategoryDTO(
+                        category.getId(),
+                        category.getName(),
+                        category.getDescription(),
+                        category.getCategory_image_url(),
+                        null // or empty list if you don't want to include products here
+                ))
+                .toList();
     }
+
 
     // ---------------- UPDATE ----------------
     @Override

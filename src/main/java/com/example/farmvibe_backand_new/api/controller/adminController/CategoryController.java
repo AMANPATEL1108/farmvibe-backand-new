@@ -1,5 +1,6 @@
 package com.example.farmvibe_backand_new.api.controller.adminController;
 
+import com.example.farmvibe_backand_new.api.dto.CategoryDTO;
 import com.example.farmvibe_backand_new.api.model.Category;
 import com.example.farmvibe_backand_new.api.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class CategoryController {
 
     // ---------------- READ ALL ----------------
     @GetMapping("/get-all-categories")
-    public List<Category> getAllCategories() {
+    public List<CategoryDTO> getAllCategories() {
         return categoryService.getAllCategories();
     }
 

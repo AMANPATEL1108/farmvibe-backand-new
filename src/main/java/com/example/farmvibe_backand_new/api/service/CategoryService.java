@@ -1,6 +1,7 @@
 package com.example.farmvibe_backand_new.api.service;
 
 
+import com.example.farmvibe_backand_new.api.dto.CategoryDTO;
 import com.example.farmvibe_backand_new.api.model.Category;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface CategoryService {
 
     Category getCategoryById(Long id);
 
-    List<Category> getAllCategories();
+    List<CategoryDTO> getAllCategories();
 
     void deleteCategory(Long id);
 }

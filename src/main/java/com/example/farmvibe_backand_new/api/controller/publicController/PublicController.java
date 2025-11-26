@@ -42,4 +42,10 @@ public class PublicController {
         System.out.println("🎯 GET /public/api/products/get-product/" + id + " called");
         return ResponseEntity.ok(productService.getProductById(id));
     }
+
+    @GetMapping("/category-by-products/{categoryId}")
+    public ResponseEntity<List<ProductDetailsDTO>> getProductsByCategoryId(@PathVariable Long categoryId) {
+        List<ProductDetailsDTO> products = productService.getProductsByCategoryId(categoryId);
+        return ResponseEntity.ok(products);
+    }
 }
