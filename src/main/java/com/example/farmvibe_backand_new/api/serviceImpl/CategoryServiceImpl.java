@@ -1,6 +1,7 @@
 package com.example.farmvibe_backand_new.api.serviceImpl;
 
 import com.example.farmvibe_backand_new.api.dto.CategoryDTO;
+import com.example.farmvibe_backand_new.api.dto.ProductDetailsDTO;
 import com.example.farmvibe_backand_new.api.service.CategoryService;
 
 
@@ -40,11 +41,42 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     // ---------------- READ BY ID ----------------
+//    @Override
+//    public Category getCategoryById(Long id) {
+//        return categoryRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Category not found with ID: " + id));
+//    }
+
     @Override
-    public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id)
+    public CategoryDTO getCategoryById(Long id) {
+
+        Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found with ID: " + id));
+
+        // Convert products to ProductDetailsDTO
+        List<ProductDetailsDTO> productDTOs = category.getProducts()
+                .stream()
+                .map(product -> new ProductDetailsDTO(
+                        product.getId(),
+                        product.getName(),
+                        product.getDescription(),
+                        product.getImageUrl(),
+                        product.getPrice(),
+                        product.getWeight(),
+                        product.getStock()
+                ))
+                .toList();
+
+        // Return the CategoryDTO
+        return new CategoryDTO(
+                category.getId(),
+                category.getName(),
+                category.getDescription(),
+                category.getCategory_image_url(),
+                productDTOs
+        );
     }
+
 
     // ---------------- READ ALL ----------------
     @Override
@@ -68,7 +100,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category updateCategory(Long id, Category category) {
 
-        Category existing = getCategoryById(id);
+        Category existing = categoryRepository.getCategoryById(id);
 
         // Update only non-null values
         if (category.getName() != null && !category.getName().isBlank()) {
@@ -89,7 +121,7 @@ public class CategoryServiceImpl implements CategoryService {
     // ---------------- DELETE ----------------
     @Override
     public void deleteCategory(Long id) {
-        Category existing = getCategoryById(id);
+        Category existing = categoryRepository.getCategoryById(id);
         categoryRepository.delete(existing);
     }
 

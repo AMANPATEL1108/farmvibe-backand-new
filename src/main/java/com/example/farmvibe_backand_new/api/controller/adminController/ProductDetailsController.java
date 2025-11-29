@@ -1,6 +1,7 @@
 package com.example.farmvibe_backand_new.api.controller.adminController;
 
 
+import com.example.farmvibe_backand_new.api.dto.ProductDetailsDTO;
 import com.example.farmvibe_backand_new.api.model.ProductDetails;
 import com.example.farmvibe_backand_new.api.service.ProductDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class ProductDetailsController {
     }
 
     @GetMapping("/get-product/{id}")
-    public ResponseEntity<ProductDetails> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductDetailsDTO> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 

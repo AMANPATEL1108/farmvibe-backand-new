@@ -9,7 +9,7 @@ public interface ProductDetailsService {
 
     List<ProductDetails> getAllProducts();
 
-    ProductDetails getProductById(Long id);
+    ProductDetailsDTO getProductById(Long id);
 
     ProductDetails createProduct(ProductDetails product);
 

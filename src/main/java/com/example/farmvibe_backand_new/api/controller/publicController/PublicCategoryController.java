@@ -27,7 +27,7 @@ public class PublicCategoryController {
     // ---------------- READ BY ID ----------------
 
     @GetMapping("get-category-by-id/{id}")
-    public Category getCategoryById(@PathVariable Long id) {
+    public CategoryDTO getCategoryById(@PathVariable Long id) {
         return categoryService.getCategoryById(id);
     }
 

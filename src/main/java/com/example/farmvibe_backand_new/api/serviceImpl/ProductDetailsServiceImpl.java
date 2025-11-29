@@ -22,10 +22,21 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
     }
 
     @Override
-    public ProductDetails getProductById(Long id) {
-        return productDetailsRepository.findById(id)
+    public ProductDetailsDTO getProductById(Long id) {
+        ProductDetails p = productDetailsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product Not Found"));
+
+        return new ProductDetailsDTO(
+                p.getId(),
+                p.getName(),
+                p.getDescription(),
+                p.getImageUrl(),
+                p.getPrice(),
+                p.getWeight(),
+                p.getStock()
+        );
     }
+
 
     @Override
     public ProductDetails createProduct(ProductDetails product) {
@@ -34,7 +45,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
     @Override
     public ProductDetails updateProduct(Long id, ProductDetails updatedProduct) {
-        ProductDetails existing = getProductById(id);
+        ProductDetails existing = productDetailsRepository.getProductById(id);
 
         // Null-safe update
         if (updatedProduct.getName() != null)
@@ -72,7 +83,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
     @Override
     public List<ProductDetailsDTO> getProductsByCategoryId(Long categoryId) {
-        List<ProductDetails> products = productDetailsRepository.findByCategory_Id(categoryId);
+        List<ProductDetails> products = productDetailsRepository.findByCategoryId(categoryId);
 
         // Map entity to DTO
         return products.stream()
