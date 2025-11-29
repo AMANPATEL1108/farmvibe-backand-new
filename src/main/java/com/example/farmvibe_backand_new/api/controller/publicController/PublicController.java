@@ -1,7 +1,6 @@
 package com.example.farmvibe_backand_new.api.controller.publicController;
 
 import com.example.farmvibe_backand_new.api.dto.ProductDetailsDTO;
-import com.example.farmvibe_backand_new.api.model.ProductDetails;
 import com.example.farmvibe_backand_new.api.service.ProductDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
