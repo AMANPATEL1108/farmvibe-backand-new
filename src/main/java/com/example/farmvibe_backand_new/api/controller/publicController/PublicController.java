@@ -28,11 +28,11 @@ public class PublicController {
                         p.getImageUrl(),
                         p.getPrice(),
                         p.getWeight(),
-                        p.getStock()
+                        p.getStock(),
+                        p.getBenefits()
                 ))
                 .toList();
 
-        System.out.println("✅ Returning " + dtos.size() + " products");
         return ResponseEntity.ok(dtos);
     }
 
@@ -47,7 +47,8 @@ public class PublicController {
                 p.getImageUrl(),
                 p.getPrice(),
                 p.getWeight(),
-                p.getStock()
+                p.getStock(),
+                p.getBenefits()
         );
 
         return ResponseEntity.ok(dto);

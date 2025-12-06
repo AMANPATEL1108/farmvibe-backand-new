@@ -63,7 +63,8 @@ public class CategoryServiceImpl implements CategoryService {
                         product.getImageUrl(),
                         product.getPrice(),
                         product.getWeight(),
-                        product.getStock()
+                        product.getStock(),
+                        product.getBenefits()
                 ))
                 .toList();
 

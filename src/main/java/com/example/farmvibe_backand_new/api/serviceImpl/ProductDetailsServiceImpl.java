@@ -33,7 +33,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
                 p.getImageUrl(),
                 p.getPrice(),
                 p.getWeight(),
-                p.getStock()
+                p.getStock(),
+                p.getBenefits()
         );
     }
 
@@ -94,7 +95,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
                         product.getImageUrl(),
                         product.getPrice(),
                         product.getWeight(),
-                        product.getStock()
+                        product.getStock(),
+                        product.getBenefits()
                 ))
                 .toList();
     }

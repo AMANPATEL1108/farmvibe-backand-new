@@ -2,6 +2,7 @@ package com.example.farmvibe_backand_new.api.serviceImpl;
 
 import com.example.farmvibe_backand_new.api.dto.LoginDTO;
 import com.example.farmvibe_backand_new.api.dto.RegisterDTO;
+import com.example.farmvibe_backand_new.api.dto.UserDTO;
 import com.example.farmvibe_backand_new.api.model.User;
 import com.example.farmvibe_backand_new.api.repository.UserRepository;
 import com.example.farmvibe_backand_new.api.service.UserAuthService;
@@ -75,12 +76,19 @@ public class UserAuthServiceImpl implements UserAuthService {
                     new UsernamePasswordAuthenticationToken(request.username(), request.password())
             );
 
-            // Only generate token if authentication succeeds
             User user = userRepository.findByUsername(request.username())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             String token = jwtService.generateToken(user);
-            return ResponseEntity.ok(Map.of("token", token));
+
+            UserDTO userDTO = new UserDTO(user);
+
+            return ResponseEntity.ok(
+                    Map.of(
+                            "token", token,
+                            "user", userDTO
+                    )
+            );
 
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -93,7 +101,6 @@ public class UserAuthServiceImpl implements UserAuthService {
                     .body("Authentication failed");
         }
     }
-
 
 
     @Override
