@@ -31,4 +31,9 @@ public class PublicCategoryController {
         return categoryService.getCategoryById(id);
     }
 
+    @GetMapping("get-product-category/{id}")
+    public CategoryDTO getProductCategoryById(@PathVariable Long id) {
+        return categoryService.getProductCategoryById(id);
+    }
+
 }

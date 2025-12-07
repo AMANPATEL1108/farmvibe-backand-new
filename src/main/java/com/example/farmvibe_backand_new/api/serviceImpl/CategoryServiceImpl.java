@@ -2,11 +2,14 @@ package com.example.farmvibe_backand_new.api.serviceImpl;
 
 import com.example.farmvibe_backand_new.api.dto.CategoryDTO;
 import com.example.farmvibe_backand_new.api.dto.ProductDetailsDTO;
+import com.example.farmvibe_backand_new.api.model.ProductDetails;
+import com.example.farmvibe_backand_new.api.repository.ProductDetailsRepository;
 import com.example.farmvibe_backand_new.api.service.CategoryService;
 
 
 import com.example.farmvibe_backand_new.api.model.Category;
 import com.example.farmvibe_backand_new.api.repository.CategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +18,9 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+
+    @Autowired
+    private ProductDetailsRepository productDetailsRepository;
 
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
@@ -126,5 +132,19 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.delete(existing);
     }
 
+            @Override
+            public CategoryDTO getProductCategoryById(Long productId) {
 
+                Category category = productDetailsRepository.findCategoryByProductId(productId)
+                        .orElseThrow(() -> new RuntimeException("Category not found for product id: " + productId));
+
+                CategoryDTO categoryDTO = new CategoryDTO();
+                categoryDTO.setId(category.getId());
+                categoryDTO.setName(category.getName());
+                categoryDTO.setDescription(category.getDescription());
+                categoryDTO.setCategory_image_url(category.getCategory_image_url());
+                categoryDTO.setProducts(null); // Set to null since we don't need products list
+
+                return categoryDTO;
+            }
 }
