@@ -39,8 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/user/address-details/**").hasRole("USER")
                         .requestMatchers("/api/locations/**").hasRole("USER")
                         .requestMatchers("/user/**").hasRole("USER")
-
-                        // Admin endpoints - require ADMIN role
+                        .requestMatchers("/user/**").hasRole("ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
                         // All other requests need authentication
